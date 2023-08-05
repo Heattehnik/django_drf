@@ -1,0 +1,117 @@
+[
+  {
+    "model": "main.course",
+    "pk": 1,
+    "fields": {
+      "title": "somecourse",
+      "preview": "",
+      "description": "best course ever"
+    }
+  },
+  {
+    "model": "main.course",
+    "pk": 2,
+    "fields": {
+      "title": "Another course",
+      "preview": "",
+      "description": "Not bad"
+    }
+  },
+  {
+    "model": "main.course",
+    "pk": 3,
+    "fields": {
+      "title": "Lesson for second course",
+      "preview": "",
+      "description": "Not bad"
+    }
+  },
+  {
+    "model": "main.lesson",
+    "pk": 1,
+    "fields": {
+      "title": "Lesson for first course",
+      "description": "Not bad",
+      "preview": "",
+      "video_url": null,
+      "course": 1
+    }
+  },
+  {
+    "model": "main.lesson",
+    "pk": 2,
+    "fields": {
+      "title": "Second lesson for first course",
+      "description": "Not bad",
+      "preview": "",
+      "video_url": null,
+      "course": 1
+    }
+  },
+  {
+    "model": "main.lesson",
+    "pk": 3,
+    "fields": {
+      "title": "Third lesson for first course",
+      "description": "Not bad",
+      "preview": "",
+      "video_url": null,
+      "course": 1
+    }
+  },
+  {
+    "model": "main.lesson",
+    "pk": 4,
+    "fields": {
+      "title": "Lesson for second course",
+      "description": "Not bad",
+      "preview": "",
+      "video_url": null,
+      "course": 2
+    }
+  },
+  {
+    "model": "main.payment",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "datetime": "2023-08-05T12:19:54.797Z",
+      "course": 1,
+      "amount": "1200.00",
+      "method": "Безналичный"
+    }
+  },
+  {
+    "model": "main.payment",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "datetime": "2023-08-05T12:20:50.403Z",
+      "course": 2,
+      "amount": "5000.00",
+      "method": "Наличные"
+    }
+  },
+  {
+    "model": "main.payment",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "datetime": "2023-08-05T12:19:54.797Z",
+      "course": 1,
+      "amount": "3200.00",
+      "method": "Безналичный"
+    }
+  },
+  {
+    "model": "main.payment",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "datetime": "2023-08-05T12:19:54.797Z",
+      "course": 1,
+      "amount": "4400.00",
+      "method": "Безналичный"
+    }
+  }
+]
