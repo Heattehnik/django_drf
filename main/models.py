@@ -22,8 +22,8 @@ class Lesson(models.Model):
 
 class Payment(models.Model):
 
-    CARD = 'безналичный'
-    CASH = 'наличный'
+    CARD = 'Безналичный'
+    CASH = 'Наличные'
 
     PAYMENT_METHOD = [
         (CARD, 'Безналичный'),
