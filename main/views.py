@@ -1,21 +1,26 @@
 from rest_framework import viewsets, generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
 
 from main.models import Course, Lesson, Payment
+from main.permissions import IsOwner, IsNotStuff, IsStuff
 from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, CourseCreateSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(owner=self.request.user)
 
 
 class CourseCreateAPIView(generics.CreateAPIView):
     serializer_class = CourseCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsNotStuff]
 
     def perform_create(self, serializer):
         new_course = serializer.save()
@@ -23,8 +28,26 @@ class CourseCreateAPIView(generics.CreateAPIView):
         new_course.save()
 
 
+class CourseUpdateAPIView(generics.UpdateAPIView):
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+    permission_classes = [IsOwner, IsStuff]
+
+
+class CourseDestroyAPIView(generics.DestroyAPIView):
+    queryset = Course.objects.all()
+    permission_classes = [IsOwner]
+
+
+class CourseRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+    permission_classes = [IsOwner]
+
+
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
+    permission_classes = [IsNotStuff]
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -40,15 +63,17 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsOwner]
+    permission_classes = [IsOwner, IsStuff]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
+    permission_classes = [IsOwner]
 
 
 class PaymentCreateAPIView(generics.CreateAPIView):
     serializer_class = PaymentSerializer
+
 
 
 class PaymentListAPIView(generics.ListAPIView):
