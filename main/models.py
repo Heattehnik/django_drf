@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+
+from config import settings
 from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
@@ -9,6 +11,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100, verbose_name='название')
     preview = models.ImageField(verbose_name='обложка', **NULLABLE)
     description = models.TextField(verbose_name='описание', **NULLABLE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
 
 
 class Lesson(models.Model):
@@ -18,6 +21,7 @@ class Lesson(models.Model):
     video_url = models.URLField(verbose_name='ссылка на видео', **NULLABLE)
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, verbose_name='Курс', **NULLABLE,
                                related_name='lessons')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
 
 
 class Payment(models.Model):

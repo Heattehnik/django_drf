@@ -15,6 +15,12 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class CourseCreateAPIView(generics.CreateAPIView):
     serializer_class = CourseCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        new_course = serializer.save()
+        new_course.owner = self.request.user
+        new_course.save()
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
@@ -34,6 +40,7 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
+    permission_classes = [IsOwner]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
