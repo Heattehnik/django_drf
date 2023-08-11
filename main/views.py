@@ -3,12 +3,19 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from main.models import Course, Lesson, Payment
+from main.paginators import CoursePaginator
 from main.permissions import IsOwner, IsNotStuff, IsStuff
-from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, CourseCreateSerializer
+from main.serializers import (
+    CourseSerializer,
+    LessonSerializer,
+    PaymentSerializer,
+    CourseCreateSerializer,
+)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
+    pagination_class = CoursePaginator
     queryset = Course.objects.all()
 
     def get_queryset(self):
@@ -79,9 +86,12 @@ class PaymentListAPIView(generics.ListAPIView):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ('method', 'course',)
-    search_fields = ['course', 'method']
-    ordering_fields = ['datetime']
+    filterset_fields = (
+        "method",
+        "course",
+    )
+    search_fields = ["course", "method"]
+    ordering_fields = ["datetime"]
 
 
 class PaymentRetrieveAPIView(generics.RetrieveAPIView):
