@@ -20,7 +20,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        if self.request.user.is_staff:
+        if self.request.user.is_staff or not self.request.user.is_authenticated:
             return queryset
         return queryset.filter(owner=self.request.user)
 
