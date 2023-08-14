@@ -17,6 +17,7 @@ class Course(models.Model):
         verbose_name="владелец",
         **NULLABLE,
     )
+    # subscribers = models.ManyToManyField(User, related_name="suscribtion", verbose_name="подписчики", **NULLABLE)
 
     def __str__(self):
         return self.title
@@ -68,3 +69,12 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.user.username}, {self.course.title}, {self.amount}"
+
+
+class Subscription(models.Model):
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, verbose_name='курс', related_name='subscription'
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="пользователь", related_name='subscription', **NULLABLE)
+    is_active = models.BooleanField(default=True, verbose_name="активна")

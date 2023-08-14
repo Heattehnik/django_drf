@@ -1,4 +1,7 @@
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from main.models import Subscription
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -8,3 +11,20 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token['email'] = user.email
         return token
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+
+    # user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def create(self, validated_data):
+        print(validated_data.get('course').pk)
+        subscription = Subscription.objects.create(
+            user=self.context['request'].user,
+            course=validated_data.get('course'),
+        )
+        return subscription
+
+    class Meta:
+        model = Subscription
+        fields = '__all__'

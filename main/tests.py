@@ -1,28 +1,48 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-
-from main.models import Course
+from django.urls import reverse
+from main.models import Course, Lesson
+from users.models import User
 
 
 class CourseTestCase(APITestCase):
-    def setUp(self):
-        pass
+    def create_user(self):
+        """User creation test"""
+        self.new_user = User.objects.create(
+            email='test@sky.pro',
+            is_active=True,
+        )
+        self.new_user.set_password('test')
+        self.new_user.save()
 
-    def test_course_create(self):
-        """Test creating a new course"""
-        data = {
-            "title": "Test Course",
-            "description": "This is a test course",
-            "lessons": [],
+    def setUp(self) -> None:
+        self.course = Course.objects.create(title='test')
+        self.user = User.objects.create(email='test@example.com', password='test')
+        self.data = {
+            'course': self.course,
+            'title': 'test',
+            'owner': self.user
         }
-        response = self.client.post("/courses/", data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.json()["title"], data["title"])
-        self.assertTrue(Course.objects.all().exists())
 
-    def test_list_courses(self):
-        """Test listing courses"""
-        Course.objects.create(title="Test Course 1", description="This is a test course")
-        response = self.client.get("/courses/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # self.assertEqual(response.json(), [{"title": "Test Course 1", "description": "This is a test course"}])
+        self.lesson = Lesson.objects.create(**self.data)
+        self.client.force_authenticate(user=self.user)
+
+    def test_1_create_lesson(self):
+        """Lesson creation testing """
+        data = {
+            'course': self.course,
+            'title': 'test2',
+            'owner': self.user.pk
+        }
+        response = self.client.post('lessons/create/', data=data)
+        print(response.__dict__)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(Lesson.objects.all().count(), 2)
+    # def test_list_courses(self):
+    #     """Test listing courses"""
+    #     Course.objects.create(title="Test Course 1", description="This is a test course")
+    #     response = self.client.get("/courses/")
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+

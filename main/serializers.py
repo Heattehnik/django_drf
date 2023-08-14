@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from main.models import Course, Lesson, Payment
+from main.models import Course, Lesson, Payment, Subscription
 from main.validators import TitleValidator, URLValidator
+from users.serializers import SubscriptionSerializer
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -37,22 +38,26 @@ class CourseCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        lessons = validated_data.pop("lessons")
-        course = Course.objects.create(**validated_data)
-
-        for lesson in lessons:
-            Lesson.objects.create(**lesson, course=course)
-
+        course = Course.objects.create(owner=self.context['request'].user, **validated_data)
         return course
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+    lessons_count = serializers.IntegerField(source="lessons.count", read_only=True)
+    lessons = LessonSerializer(many=True, read_only=True)
+
+    def get_is_subscribed(self, instance):
+        request = self.context['request']
+        subscription = Subscription.objects.filter(user=request.user,
+                                                   course=instance)
+        if subscription:
+            return True
+        return False
+
     class Meta:
         model = Course
         fields = "__all__"
-
-    lessons_count = serializers.IntegerField(source="lessons.count", read_only=True)
-    lessons = LessonSerializer(many=True, read_only=True)
 
 
 class PaymentSerializer(serializers.ModelSerializer):

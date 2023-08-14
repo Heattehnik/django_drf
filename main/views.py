@@ -29,11 +29,6 @@ class CourseCreateAPIView(generics.CreateAPIView):
     serializer_class = CourseCreateSerializer
     permission_classes = [IsNotStuff]
 
-    def perform_create(self, serializer):
-        new_course = serializer.save()
-        new_course.owner = self.request.user
-        new_course.save()
-
 
 class CourseUpdateAPIView(generics.UpdateAPIView):
     serializer_class = CourseSerializer
