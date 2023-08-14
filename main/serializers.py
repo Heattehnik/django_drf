@@ -1,13 +1,26 @@
 from rest_framework import serializers
 
 from main.models import Course, Lesson, Payment
-from main.validators import TitleValidator
+from main.validators import TitleValidator, URLValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
+
+
+class LessonCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Lesson
+        fields = "__all__"
+        validators = [
+            URLValidator(field="video_url"),
+            serializers.UniqueTogetherValidator(
+                fields=("video_url",), queryset=Lesson.objects.all()
+            ),
+        ]
 
 
 class CourseCreateSerializer(serializers.ModelSerializer):

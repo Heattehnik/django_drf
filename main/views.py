@@ -9,7 +9,7 @@ from main.serializers import (
     CourseSerializer,
     LessonSerializer,
     PaymentSerializer,
-    CourseCreateSerializer,
+    CourseCreateSerializer, LessonCreateSerializer,
 )
 
 
@@ -53,8 +53,13 @@ class CourseRetrieveAPIView(generics.RetrieveAPIView):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
-    serializer_class = LessonSerializer
+    serializer_class = LessonCreateSerializer
     permission_classes = [IsNotStuff]
+
+    def perform_create(self, serializer):
+        new_lesson = serializer.save()
+        new_lesson.owner = self.request.user
+        new_lesson.save()
 
 
 class LessonListAPIView(generics.ListAPIView):
