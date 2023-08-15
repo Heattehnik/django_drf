@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from main.models import Course, Lesson
+from main.models import Course, Lesson, Subscription
 from users.models import User
 
 
@@ -26,6 +26,7 @@ class CourseTestCase(APITestCase):
 
         self.lesson = Lesson.objects.create(**self.data)
         self.client.force_authenticate(user=self.user)
+        self.subscription = Subscription.objects.create(course=self.course, user=self.user)
 
     def test_course_create(self):
         """Test creating a new course"""
@@ -110,3 +111,7 @@ class CourseTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Lesson.objects.all().exists())
 
+    def test_active_subscription(self):
+        response = self.client.get(f"/courses/{self.course.pk}/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.json()["is_subscribed"])
