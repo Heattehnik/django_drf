@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from main.services import create_payment
+from main.services import create_payment, retrieve_payment, make_payment
 from main.models import Course, Lesson, Payment, Subscription
 from main.validators import TitleValidator, URLValidator
 from users.serializers import SubscriptionSerializer
@@ -67,10 +67,38 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class PaymentCreateSerializer(serializers.ModelSerializer):
-    invoice = serializers.SerializerMethodField()
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        validated_data['payment_intent_id'] = create_payment(int(validated_data.get('amount')))
+        payment = Payment.objects.create(**validated_data)
+        return payment
 
-    def get_invoice(self, instance):
-        return
+    class Meta:
+        model = Payment
+        fields = "__all__"
+
+
+class PaymentRetrieveSerializer(serializers.ModelSerializer):
+    payment_status = serializers.SerializerMethodField()
+
+    def get_payment_status(self, instance):
+        return retrieve_payment(instance.payment_intent_id)
+
+    class Meta:
+        model = Payment
+        fields = "__all__"
+
+
+class PaymentUpdateSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        payment = make_payment(instance.payment_intent_id)
+        if payment == 'succeeded':
+            instance.is_paid = True
+            instance.save()
+            return instance
+        else:
+            return instance
+
     class Meta:
         model = Payment
         fields = "__all__"

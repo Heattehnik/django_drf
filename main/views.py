@@ -9,7 +9,8 @@ from main.serializers import (
     CourseSerializer,
     LessonSerializer,
     PaymentSerializer,
-    CourseCreateSerializer, LessonCreateSerializer,
+    CourseCreateSerializer, LessonCreateSerializer, PaymentCreateSerializer, PaymentRetrieveSerializer,
+    PaymentUpdateSerializer,
 )
 
 
@@ -112,7 +113,7 @@ class PaymentCreateAPIView(generics.CreateAPIView):
     """
     API endpoint that allows users to create payments.
     """
-    serializer_class = PaymentSerializer
+    serializer_class = PaymentCreateSerializer
 
 
 class PaymentListAPIView(generics.ListAPIView):
@@ -134,7 +135,7 @@ class PaymentRetrieveAPIView(generics.RetrieveAPIView):
     """
     API endpoint that allows users to retrieve payment.
     """
-    serializer_class = PaymentSerializer
+    serializer_class = PaymentRetrieveSerializer
     queryset = Payment.objects.all()
 
 
@@ -142,7 +143,7 @@ class PaymentUpdateAPIView(generics.UpdateAPIView):
     """
     API endpoint that allows users to update payment.
     """
-    serializer_class = PaymentSerializer
+    serializer_class = PaymentUpdateSerializer
     queryset = Payment.objects.all()
 
 

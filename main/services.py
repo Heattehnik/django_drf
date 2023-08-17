@@ -17,7 +17,6 @@ def create_payment(amount: float) -> str:
               }
     url = 'https://api.stripe.com/v1/payment_intents'
     response = requests.post(url, headers=headers, params=params)
-    print(response.status_code)
     if response.status_code == 200:
         return response.json().get('id')
     else:
@@ -29,7 +28,8 @@ def retrieve_payment(payment_intent_id: str) -> dict:
     headers = {'Authorization': f"Bearer {os.getenv('STRIPE_TOKEN')}"}
     url = 'https://api.stripe.com/v1/payment_intents/pi_3Ng07YHFrcPNAK920PvNe6Vv'
     response = requests.get(url, headers=headers)
-    return response.json()
+    if response.status_code == 200:
+        return response.json().get("status")
 
 
 def make_payment(payment_intent_id: str) -> dict:
@@ -38,4 +38,9 @@ def make_payment(payment_intent_id: str) -> dict:
     params = {'payment_method': 'pm_card_visa'}
     url = f'https://api.stripe.com/v1/payment_intents/{payment_intent_id}/confirm'
     response = requests.post(url, headers=headers, params=params)
-    return response.json()
+    if response.status_code == 200:
+        if response.json().get('status') == 'succeeded':
+            return response.json().get('status')
+    else:
+        return response.json().get('error')
+
