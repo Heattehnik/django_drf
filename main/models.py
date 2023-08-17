@@ -66,6 +66,8 @@ class Payment(models.Model):
     method = models.CharField(
         max_length=100, choices=PAYMENT_METHOD, verbose_name="способ оплаты"
     )
+    is_paid = models.BooleanField(default=False, verbose_name="оплачено")
+    payment_intent_id = models.CharField(default='NULL', max_length=100, verbose_name="id_платежа")
 
     def __str__(self):
         return f"{self.user.username}, {self.course.title}, {self.amount}"
@@ -78,3 +80,4 @@ class Subscription(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, verbose_name="пользователь", related_name='subscription', **NULLABLE)
     is_active = models.BooleanField(default=True, verbose_name="активна")
+

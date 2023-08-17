@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from main.services import create_payment
 from main.models import Course, Lesson, Payment, Subscription
 from main.validators import TitleValidator, URLValidator
 from users.serializers import SubscriptionSerializer
@@ -61,6 +61,16 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+
+
+class PaymentCreateSerializer(serializers.ModelSerializer):
+    invoice = serializers.SerializerMethodField()
+
+    def get_invoice(self, instance):
+        return
     class Meta:
         model = Payment
         fields = "__all__"

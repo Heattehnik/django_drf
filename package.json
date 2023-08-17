@@ -1,0 +1,61 @@
+{
+  'id': 'pi_3Ng00AHFrcPNAK920jIDAhuD',
+  'object': 'payment_intent',
+  'amount': 100,
+  'amount_capturable': 0,
+  'amount_details': {
+    'tip': {}
+  },
+  'amount_received': 0,
+  'application': None,
+  'application_fee_amount': None,
+  'automatic_payment_methods': {
+    'allow_redirects': 'always',
+    'enabled': True
+  },
+  'canceled_at': None,
+  'cancellation_reason': None,
+  'capture_method': 'automatic',
+  'client_secret': 'pi_3Ng00AHFrcPNAK920jIDAhuD_secret_AR1iM5yDVcm3DffOmSuAeIcUN',
+  'confirmation_method': 'automatic',
+  'created': 1692254894,
+  'currency': 'usd',
+  'customer': None,
+  'description': None,
+  'invoice': None,
+  'last_payment_error': None,
+  'latest_charge': None,
+  'livemode': False,
+  'metadata': {},
+  'next_action': None,
+  'on_behalf_of': None,
+  'payment_method': None,
+  'payment_method_options': {
+    'card': {
+      'installments': None,
+      'mandate_options': None,
+      'network': None,
+      'request_three_d_secure': 'automatic'
+    },
+    'cashapp': {},
+    'link': {
+      'persistent_token': None
+    }
+  },
+  'payment_method_types': [
+    'card',
+    'link',
+    'cashapp'
+  ],
+  'processing': None,
+  'receipt_email': None,
+  'review': None,
+  'setup_future_usage': None,
+  'shipping': None,
+  'source': None,
+  'statement_descriptor': None,
+  'statement_descriptor_suffix': None,
+  'status': 'requires_payment_method',
+  'transfer_data': None,
+  'transfer_group': None
+}
