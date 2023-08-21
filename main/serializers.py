@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from main.services import create_payment, retrieve_payment, make_payment
 from main.models import Course, Lesson, Payment, Subscription
+from main.tasks import send_course_update_email
 from main.validators import TitleValidator, URLValidator
 from users.serializers import SubscriptionSerializer
 
