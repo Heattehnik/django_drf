@@ -26,7 +26,7 @@ def create_payment(amount: float) -> str:
 def retrieve_payment(payment_intent_id: str) -> dict:
     """Retrieve a payment"""
     headers = {'Authorization': f"Bearer {os.getenv('STRIPE_TOKEN')}"}
-    url = 'https://api.stripe.com/v1/payment_intents/pi_3Ng07YHFrcPNAK920PvNe6Vv'
+    url = f'https://api.stripe.com/v1/payment_intents/{payment_intent_id}'
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         return response.json().get("status")
