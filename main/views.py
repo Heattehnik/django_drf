@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from main.tasks import send_course_update_email
 import requests
 from main.models import Course, Lesson, Payment
 from main.paginators import CoursePaginator
@@ -21,6 +22,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     pagination_class = CoursePaginator
     queryset = Course.objects.all()
+
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -43,7 +45,16 @@ class CourseUpdateAPIView(generics.UpdateAPIView):
     """
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
-    permission_classes = [IsOwner, IsStuff]
+    # permission_classes = [IsOwner, IsStuff]
+
+    def patch(self, request, *args, **kwargs):
+        print("Patching")
+        instance = self.get_object()  # Получение объекта курса
+        subscribers = instance.subscription.filter(is_active=True)
+        for subscriber in subscribers:
+            send_course_update_email.delay(instance.title, subscriber.user.email)
+
+        return super().update(request, *args, **kwargs)
 
 
 class CourseDestroyAPIView(generics.DestroyAPIView):
